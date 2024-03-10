@@ -804,13 +804,31 @@ _The result should consist of the following fields: store-id and I, II, III, IV 
 
 ```sql
 select
- c.store_id,
+ store_id,
  sum(case when quarter(payment_date) = 1 then amount else 0 end) as "I",
  sum(case when quarter(payment_date) = 2 then amount else 0 end) as "II",
  sum(case when quarter(payment_date) = 3 then amount else 0 end) as "III",
  sum(case when quarter(payment_date) = 4 then amount else 0 end) as "IV"
 from payment p
-join customer c on p.customer_id = c.customer_id
+join staff s on p.staff_id = s.staff_id
 where year(payment_date) = 2005
 group by 1
+```
+
+## Find the countries with the most customers
+
+_Find the three countries with the largest number of customers living there._  
+_Output the result in two columns: actor and customers-count sorted by the number of clients from largest to smallest._
+
+```sql
+select
+ country,
+ count(*) as customers_count
+from country c
+join city ci on c.country_id = ci.country_id
+join address a on ci.city_id = a.city_id
+join customer cu on a.address_id = cu.address_id
+group by 1
+order by 2 desc
+limit 3
 ```
