@@ -5,12 +5,12 @@ _Write a query that displays one value in the column avg-days-between-rentals_
 
 ```sql
 select
- avg(datediff(return_date, lg)) as avg_days_between_rentals
+ avg(datediff(ld, return_date)) as avg_days_between_rentals
 from (
     select
      inventory_id,
      return_date,
-     lag(return_date) over (partition by inventory_id order by rental_date) as lg
+     lead(rental_date) over (partition by inventory_id order by return_date) as ld
     from rental
 )t
 ```
