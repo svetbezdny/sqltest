@@ -100,3 +100,61 @@ from (
 )t
 where film_rank <= 3
 ```
+
+## Find customer details
+
+_Find the data of the client who last purchased the disk with inventory number inventory-id 30._  
+_Write a request displaying the first name, last name, email and address of this client_
+
+```sql
+select
+ first_name,
+ last_name,
+ email,
+ address
+from (
+    select
+    first_name,
+    last_name,
+    email,
+    address,
+    row_number() over(order by rental_date desc) as rn
+    from customer c
+    join address a on c.address_id = a.address_id
+    join rental r
+    on c.customer_id = r.customer_id
+    where inventory_id = 30
+) t
+where rn = 1
+```
+
+## Find EMILY DEE fans
+
+_Find clients who have watched the most films featuring EMILY DEE._  
+_As a result, display a table with columns first-name, last-name - client's first and last name, film-count - the number of films with EMILY DEE's rented, films - a comma separated list of the names of these films._  
+_Sort the list by customer last name. Use the RANK function in your solution._
+
+```sql
+select
+ first_name,
+ last_name,
+ film_count,
+ films
+from (
+    select
+     c.first_name,
+     c.last_name,
+     count(distinct f.film_id) as film_count,
+     group_concat(distinct title separator ',') as films,
+     rank() over (order by count(distinct f.film_id) desc) as rn
+    from customer c
+    join rental r on c.customer_id = r.customer_id
+    join inventory i on r.inventory_id = i.inventory_id
+    join film_actor fa on i.film_id = fa.film_id
+    join film f on fa.film_id = f.film_id
+    join actor a on fa.actor_id = a.actor_id
+    where a.first_name = 'EMILY' and a.last_name = 'DEE'
+    group by 1, 2
+    )t where rn = 1
+order by last_name
+```

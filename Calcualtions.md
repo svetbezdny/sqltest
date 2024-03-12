@@ -1,3 +1,21 @@
+## Calculate circle perimeter
+
+_Write a query to calculate the perimeter of a circle with diameter 7._  
+_Display the result in the circle-perimeter column_
+
+```sql
+select pi() * 7 as circle_perimeter
+```
+
+## Calculate the area of a circle
+
+_Write a query to calculate the area of a circle with radius 12._  
+_Display the result in the circle-area column_
+
+```sql
+select pi() * pow(12, 2) as circle_area
+```
+
 ## Calculate factorial
 
 _Write a query that returns a table of factorial values for integers from 0 to 10._  

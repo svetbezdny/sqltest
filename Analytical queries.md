@@ -102,3 +102,35 @@ from (
 )t
 where film_rank <= 3
 ```
+
+## Find the count of rented disks
+
+_Find the number of discs in rental at the end of the day 2005-05-31 for each rental point._  
+_Print the result in two columns store-id and rented-at-2005-05-31 Sort the resulting list in ascending order store-id._
+
+```sql
+select
+ store_id,
+ count(*) as rented_at_2005_05_31
+from rental r
+join inventory i on r.inventory_id = i.inventory_id
+where rental_date between (select min(rental_date) from rental) and '2005-05-31 23:59:59' and return_date > '2005-05-31 23:59:59'
+group by 1
+order by 1
+```
+
+## Find the number of returns
+
+_Find the number of discs returned during 2005-06-01 for each rental point._  
+_Print the result in two columns store-id and returned-at-2005-06-01. Sort the resulting list in ascending order store-id._
+
+```sql
+select
+ store_id,
+ count(*) as returned_at_2005_06_01
+from rental r
+join inventory i on r.inventory_id = i.inventory_id
+where return_date between '2005-06-01 00:00:00' and '2005-06-01 23:59:59'
+group by 1
+order by 1
+```
